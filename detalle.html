@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ <meta charset="UTF-8">
+ <title>JTVI - Detalle Folio</title>
+ <style>
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto; background: #f5f5f5; padding: 20px; }
+ .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: white; padding: 20px; border-radius: 8px; }
+ .back-btn { padding: 10px 20px; background: #0D2D47; color: white; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; }
+ .container { max-width: 1200px; margin: 0 auto; }
+ .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+ .section h2 { color: #0D2D47; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #7CB342; padding-bottom: 10px; }
+ .section-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+ .field { display: flex; flex-direction: column; }
+ .field label { font-weight: 600; color: #666; font-size: 12px; margin-bottom: 5px; }
+ .field value { color: #0D2D47; font-size: 14px; }
+ .pc-status { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
+ .pc-box { padding: 15px; border-radius: 6px; border-left: 4px solid; background: #f9f9f9; }
+ .pc-box.done { border-left-color: #2e7d32; background: #c8e6c9; }
+ .pc-box.pending { border-left-color: #d84315; background: #ffccbc; }
+ .pc-box h3 { font-size: 14px; margin-bottom: 5px; }
+ .pc-box p { font-size: 12px; color: #666; }
+ table { width: 100%; border-collapse: collapse; }
+ th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+ th { background: #f0f0f0; font-weight: 600; }
+ .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
+ .photo-box { position: relative; width: 100%; aspect-ratio: 1; border-radius: 6px; overflow: hidden; background: #f0f0f0; cursor: pointer; }
+ .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+ .photo-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.6); color: white; padding: 8px; font-size: 12px; }
+ .button-group { display: flex; gap: 10px; margin-top: 20px; }
+ .btn-primary { padding: 12px 20px; background: #7CB342; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+ .btn-primary:hover { background: #6BA234; }
+ .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+ .modal.active { display: flex; }
+ .modal-content { background: white; padding: 20px; border-radius: 8px; max-width: 500px; width: 90%; }
+ .modal-content h3 { margin-bottom: 15px; }
+ .modal-buttons { display: flex; gap: 10px; margin-top: 15px; }
+ .modal-buttons button { flex: 1; padding: 10px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+ .modal-buttons .cancel { background: #ccc; color: #333; }
+ .modal-buttons .confirm { background: #7CB342; color: white; }
+ </style>
+</head>
+<body>
+ <div class="header">
+ <a href="/dashboard.html" class="back-btn">← Volver al Dashboard</a>
+ <h1>Detalle del Folio</h1>
+ </div>
+ <div class="container">
+ <!-- Datos Escuela -->
+ <div class="section">
+ <h2>📍 Información de la Escuela</h2>
+ <div class="section-content">
+ <div class="field"><label>Nombre</label><value id="escuela-nombre"></value></div>
+ <div class="field"><label>CCT</label><value id="escuela-cct"></value></div>
+ <div class="field"><label>Director</label><value id="escuela-director"></value></div>
+ <div class="field"><label>Teléfono</label><value id="escuela-telefono"></value></div>
+ <div class="field"><label>Municipio</label><value id="escuela-municipio"></value></div>
+ </div>
+ </div>
+ <!-- Puntos de Control -->
+ <div class="section">
+ <h2>✅ Puntos de Control</h2>
+ <div class="pc-status" id="pc-status"></div>
+ </div>
+ <!-- Seriales de TVs -->
+ <div class="section">
+ <h2>📺 Televisores Asignados</h2>
+ <table>
+ <thead><tr><th>Serial</th><th>Modelo</th><th>Estado</th></tr></thead>
+ <tbody id="seriales-tbody"></tbody>
+ </table>
+ </div>
+ <!-- Fotos -->
+ <div class="section">
+ <h2>📸 Evidencia Fotográfica</h2>
+ <div class="gallery" id="gallery"></div>
+ </div>
+ <!-- Acciones -->
+ <div class="section">
+ <div class="button-group">
+ <button class="btn-primary" onclick="abrirModalCambioEstado()">Cambiar Estado</button>
+ </div>
+ </div>
+ </div>
+ <!-- Modal -->
+ <div class="modal" id="modalEstado">
+ <div class="modal-content">
+ <h3>Cambiar Estado del Folio</h3>
+ <p>Selecciona el nuevo estado:</p>
+ <select id="nuevoEstado" style="width: 100%; padding: 10px; margin: 15px 0; border-radius: 6px;">
+ <option value="pendiente">Pendiente</option>
+ <option value="pre_validado">Pre-Validado (PC1)</option>
+ <option value="en_instalacion">En Instalación (PC2)</option>
+ <option value="cerrado_liquidable">Cerrado Liquidable (PC3)</option>
+ <option value="cancelado">Cancelado</option>
+ </select>
+ <div class="modal-buttons">
+ <button class="cancel" onclick="cerrarModal()">Cancelar</button>
+ <button class="confirm" onclick="guardarCambioEstado()">Guardar</button>
+ </div>
+ </div>
+ </div>
+
+ <script>
+ let folioActual = null;
+ async function cargarDetalle() {
+ const params = new URLSearchParams(window.location.search);
+ const folioId = params.get('id');
+ const token = localStorage.getItem('token');
+ try {
+ const response = await fetch('http://localhost:3000/api/folios', {
+ headers: { 'Authorization': `Bearer ${token}` }
+ });
+ const folios = await response.json();
+ folioActual = folios.find(f => f.id === parseInt(folioId));
+ if (folioActual) renderizar(folioActual);
+ } catch (error) { console.error('Error:', error); }
+ }
+
+ function renderizar(folio) {
+ document.getElementById('escuela-nombre').textContent = folio.escuela.nombre;
+ document.getElementById('escuela-cct').textContent = folio.escuela.cct;
+ document.getElementById('escuela-director').textContent = folio.escuela.director;
+ document.getElementById('escuela-telefono').textContent = folio.escuela.telefono;
+ document.getElementById('escuela-municipio').textContent = folio.escuela.municipio;
+
+ const pcHtml = `
+ <div class="pc-box ${folio.pc1_validado ? 'done' : 'pending'}">
+ <h3>PC1 - Pre-Validación Técnica</h3>
+ <p>${folio.pc1_validado ? '✓ Validado' : '⏳ Pendiente'}</p>
+ <p>${folio.pc1_fecha || 'Sin fecha'}</p>
+ </div>
+ <div class="pc-box ${folio.pc2_validado ? 'done' : 'pending'}">
+ <h3>PC2 - Instalación en Terreno</h3>
+ <p>${folio.pc2_validado ? '✓ Validado' : '⏳ Pendiente'}</p>
+ <p>${folio.pc2_fecha || 'Sin fecha'}</p>
+ </div>
+ <div class="pc-box ${folio.pc3_validado ? 'done' : 'pending'}">
+ <h3>PC3 - Cierre Documentario</h3>
+ <p>${folio.pc3_validado ? '✓ Validado' : '⏳ Pendiente'}</p>
+ <p>${folio.pc3_fecha || 'Sin fecha'}</p>
+ </div>`;
+ document.getElementById('pc-status').innerHTML = pcHtml;
+
+ const tableTbody = document.getElementById('seriales-tbody');
+ tableTbody.innerHTML = folio.seriales.map(serial => `
+ <tr><td>${serial.numero}</td><td>${serial.modelo}</td><td>${serial.estado}</td></tr>
+ `).join('');
+
+ const gallery = document.getElementById('gallery');
+ gallery.innerHTML = folio.fotos.map(foto => `
+ <div class="photo-box">
+ <img src="${foto.url}" alt="${foto.nombre}">
+ <div class="photo-label">${foto.tipo}</div>
+ </div>`).join('');
+ }
+
+ function abrirModalCambioEstado() { document.getElementById('modalEstado').classList.add('active'); }
+ function cerrarModal() { document.getElementById('modalEstado').classList.remove('active'); }
+
+ async function guardarCambioEstado() {
+ const nuevoEstado = document.getElementById('nuevoEstado').value;
+ const token = localStorage.getItem('token');
+ try {
+ await fetch(`http://localhost:3000/api/folios/${folioActual.id}`, {
+ method: 'PATCH',
+ headers: {
+ 'Content-Type': 'application/json',
+ 'Authorization': `Bearer ${token}`
+ },
+ body: JSON.stringify({ estado: nuevoEstado })
+ });
+ alert('Estado actualizado');
+ cerrarModal();
+ cargarDetalle();
+ } catch (error) { console.error('Error:', error); }
+ }
+
+ cargarDetalle();
+ </script>
+</body>
+</html>

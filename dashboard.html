@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+ <meta charset="UTF-8">
+ <title>JTVI - Dashboard</title>
+ <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+ <style>
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto; background: #f5f5f5; padding: 20px; }
+ .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: white; padding: 20px; border-radius: 8px; }
+ .header h1 { color: #0D2D47; font-size: 28px; }
+ .logout-btn { padding: 10px 20px; background: #d32f2f; color: white; border: none; border-radius: 6px; cursor: pointer; }
+ .kanban-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; min-height: 600px; }
+ .kanban-column { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+ .kanban-column h2 { color: #0D2D47; font-size: 16px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #7CB342; }
+ .folio-card { background: #f9f9f9; border-left: 4px solid #7CB342; padding: 12px; margin-bottom: 12px; border-radius: 6px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+ .folio-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+ .folio-id { font-weight: 600; color: #0D2D47; margin-bottom: 8px; }
+ .folio-escuela { font-size: 13px; color: #666; margin-bottom: 8px; }
+ .pc-status { display: flex; gap: 8px; font-size: 12px; }
+ .pc-status span { padding: 2px 6px; border-radius: 3px; background: #f0f0f0; }
+ .pc-status .done { background: #c8e6c9; color: #2e7d32; }
+ .pc-status .pending { background: #ffccbc; color: #d84315; }
+ </style>
+</head>
+<body>
+ <div class="header">
+ <h1>📊 Dashboard JTVI</h1>
+ <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+ </div>
+ <div class="kanban-container" id="kanban"></div>
+ <script>
+ const estados = {
+ 'pendiente': 'Pendiente',
+ 'pre_validado': 'Pre-Validado PC1',
+ 'en_instalacion': 'En Instalación PC2',
+ 'cerrado_liquidable': 'Cerrado PC3'
+ };
+ async function cargarFolios() {
+ const token = localStorage.getItem('token');
+ try {
+ const response = await fetch('http://localhost:3000/api/folios', {
+ headers: { 'Authorization': `Bearer ${token}` }
+ });
+ const folios = await response.json();
+ renderizarKanban(folios);
+ } catch (error) { console.error('Error:', error); }
+ }
+ 
+ function renderizarKanban(folios) {
+ const kanban = document.getElementById('kanban');
+ kanban.innerHTML = '';
+ Object.entries(estados).forEach(([estado, titulo]) => {
+ const column = document.createElement('div');
+ column.className = 'kanban-column';
+ column.innerHTML = `<h2>${titulo}</h2>`;
+ const foliosEstado = folios.filter(f => f.estado === estado);
+ foliosEstado.forEach(folio => {
+ const card = document.createElement('div');
+ card.className = 'folio-card';
+ card.dataset.folioId = folio.id;
+ card.onclick = () => verDetalle(folio.id);
+ const pcStatus = `
+ <div class="pc-status">
+ <span class="${folio.pc1_validado ? 'done' : 'pending'}">PC1 ${folio.pc1_validado ? '✓' : ' '}</span>
+ <span class="${folio.pc2_validado ? 'done' : 'pending'}">PC2 ${folio.pc2_validado ? '✓' : ' '}</span>
+ <span class="${folio.pc3_validado ? 'done' : 'pending'}">PC3 ${folio.pc3_validado ? '✓' : ' '}</span>
+ </div>`;
+ card.innerHTML = `
+ <div class="folio-id">${folio.numero_folio}</div>
+ <div class="folio-escuela">${folio.escuela.nombre}</div>
+ ${pcStatus}`;
+ column.appendChild(card);
+ });
+ kanban.appendChild(column);
+ });
+ 
+ // Drag & Drop
+ document.querySelectorAll('.kanban-column').forEach((column, idx) => {
+ Sortable.create(column, {
+ group: 'folios',
+ animation: 150,
+ onEnd: async (evt) => {
+ const folioId = evt.item.dataset.folioId;
+ const columnaIndex = Array.from(kanban.children).indexOf(evt.to);
+ const estadoNuevo = Object.keys(estados)[columnaIndex];
+ const token = localStorage.getItem('token');
+ await fetch(`http://localhost:3000/api/folios/${folioId}`, {
+ method: 'PATCH',
+ headers: {
+ 'Content-Type': 'application/json',
+ 'Authorization': `Bearer ${token}`
+ },
+ body: JSON.stringify({ estado: estadoNuevo })
+ });
+ cargarFolios();
+ }
+ });
+ });
+ }
+ 
+ function verDetalle(folioId) { window.location.href = `/detalle.html?id=${folioId}`; }
+ function logout() { localStorage.clear(); window.location.href = '/login.html'; }
+ cargarFolios();
+ </script>
+</body>
+</html>

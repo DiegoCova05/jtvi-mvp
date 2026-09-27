@@ -1,0 +1,194 @@
+[
+  {
+    "id": 1,
+    "numero_folio": "F-2024-001",
+    "escuela": {
+      "nombre": "Primaria Miguel Hidalgo",
+      "cct": "1400100001",
+      "director": "Lic. Juan Carlos González",
+      "telefono": "+52 33 1599 7682",
+      "municipio": "Guadalajara"
+    },
+    "lote": "LOTE-001",
+    "estado": "pre_validado",
+    "pc1_validado": true,
+    "pc1_fecha": "2024-09-20 09:30",
+    "pc2_validado": false,
+    "pc2_fecha": null,
+    "pc3_validado": false,
+    "pc3_fecha": null,
+    "seriales": [
+      {
+        "numero": "TV-001-2024",
+        "modelo": "Samsung 55\\\"",
+        "estado": "disponible"
+      },
+      {
+        "numero": "TV-002-2024",
+        "modelo": "LG 43\\\"",
+        "estado": "disponible"
+      }
+    ],
+    "fotos": [
+      {
+        "nombre": "TV_powered_on.jpg",
+        "url": "https://via.placeholder.com/300?text=TV+Encendido",
+        "tipo": "encendido"
+      },
+      {
+        "nombre": "serial_plate.jpg",
+        "url": "https://via.placeholder.com/300?text=Placa+Serial",
+        "tipo": "serial"
+      },
+      {
+        "nombre": "receipt_stamped.jpg",
+        "url": "https://via.placeholder.com/300?text=Recibo",
+        "tipo": "recibo"
+      }
+    ],
+    "fecha_creacion": "2024-09-20 08:00"
+  },
+  {
+    "id": 2,
+    "numero_folio": "F-2024-002",
+    "escuela": {
+      "nombre": "Secundaria Benito Juárez",
+      "cct": "1400100002",
+      "director": "Dra. María López García",
+      "telefono": "+52 33 1234 5678",
+      "municipio": "Zapopan"
+    },
+    "lote": "LOTE-001",
+    "estado": "pre_validado",
+    "pc1_validado": true,
+    "pc1_fecha": "2024-09-19 14:00",
+    "pc2_validado": true,
+    "pc2_fecha": "2024-09-21 10:15",
+    "pc3_validado": false,
+    "pc3_fecha": null,
+    "seriales": [
+      {
+        "numero": "TV-003-2024",
+        "modelo": "Samsung 65\\\"",
+        "estado": "instalada"
+      }
+    ],
+    "fotos": [
+      {
+        "nombre": "TV_powered_on.jpg",
+        "url": "https://via.placeholder.com/300?text=TV+Encendido",
+        "tipo": "encendido"
+      },
+      {
+        "nombre": "serial_plate.jpg",
+        "url": "https://via.placeholder.com/300?text=Placa+Serial",
+        "tipo": "serial"
+      },
+      {
+        "nombre": "receipt_stamped.jpg",
+        "url": "https://via.placeholder.com/300?text=Recibo",
+        "tipo": "recibo"
+      }
+    ],
+    "fecha_creacion": "2024-09-19 13:30"
+  },
+  {
+    "id": 3,
+    "numero_folio": "F-2024-003",
+    "escuela": {
+      "nombre": "Primaria Emilio Zapata",
+      "cct": "1400100003",
+      "director": "Profr. Roberto Hernández",
+      "telefono": "+52 33 9876 5432",
+      "municipio": "Tlajomulco"
+    },
+    "lote": "LOTE-002",
+    "estado": "cerrado_liquidable",
+    "pc1_validado": true,
+    "pc1_fecha": "2024-09-18 11:00",
+    "pc2_validado": true,
+    "pc2_fecha": "2024-09-20 09:45",
+    "pc3_validado": true,
+    "pc3_fecha": "2024-09-21 16:30",
+    "seriales": [
+      {
+        "numero": "TV-004-2024",
+        "modelo": "LG 55\\\"",
+        "estado": "documentada"
+      }
+    ],
+    "fotos": [
+      {
+        "nombre": "TV_powered_on.jpg",
+        "url": "https://via.placeholder.com/300?text=TV+Encendido",
+        "tipo": "encendido"
+      },
+      {
+        "nombre": "serial_plate.jpg",
+        "url": "https://via.placeholder.com/300?text=Placa+Serial",
+        "tipo": "serial"
+      },
+      {
+        "nombre": "receipt_stamped.jpg",
+        "url": "https://via.placeholder.com/300?text=Recibo",
+        "tipo": "recibo"
+      }
+    ],
+    "fecha_creacion": "2024-09-18 10:15"
+  },
+  {
+    "id": 4,
+    "numero_folio": "F-2024-004",
+    "escuela": {
+      "nombre": "Primaria Vicente Guerrero",
+      "cct": "1400100004",
+      "director": "Profra. Ana María Soto",
+      "telefono": "+52 33 5555 5555",
+      "municipio": "Guadalajara"
+    },
+    "lote": "LOTE-002",
+    "estado": "en_instalacion",
+    "pc1_validado": false,
+    "pc1_fecha": null,
+    "pc2_validado": false,
+    "pc2_fecha": null,
+    "pc3_validado": false,
+    "pc3_fecha": null,
+    "seriales": [
+      {
+        "numero": "TV-005-2024",
+        "modelo": "Samsung 43\\\"",
+        "estado": "disponible"
+      },
+      {
+        "numero": "TV-006-2024",
+        "modelo": "LG 43\\\"",
+        "estado": "disponible"
+      }
+    ],
+    "fotos": [],
+    "fecha_creacion": "2024-09-21 08:30"
+  },
+  {
+    "id": 5,
+    "numero_folio": "F-2024-005",
+    "escuela": {
+      "nombre": "Primaria Libertad",
+      "cct": "1400100005",
+      "director": "Lic. Carlos Mendoza",
+      "telefono": "+52 33 1111 1111",
+      "municipio": "Zapopan"
+    },
+    "lote": "LOTE-001",
+    "estado": "cancelado",
+    "pc1_validado": false,
+    "pc1_fecha": null,
+    "pc2_validado": false,
+    "pc2_fecha": null,
+    "pc3_validado": false,
+    "pc3_fecha": null,
+    "seriales": [],
+    "fotos": [],
+    "fecha_creacion": "2024-09-15 14:00"
+  }
+]
